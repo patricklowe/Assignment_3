@@ -11,11 +11,13 @@ void elfAttributes(int a);//function for Elf Attributes
 void wizardAttributes(int a);//function for Wizard Attributes
 void fAssign();
 void fOption();
+void nearSearch(int a);
+void nearAttack(int n,int i);
 //void moveForward(int i);
 //void moveBack(int i);
 void CapabilitiesChange(int i);
-void fAttack(int i);
-int nearestPlayer(int i);
+//void fAttack(int i);
+//int nearestPlayer(int i);
 void fContinue();
 void close();
 int fBoard();
@@ -203,7 +205,7 @@ int iSwap, i, j;
 
 		printf("\n\t 1. Move Forward\n");
 		printf("\t 2. Move Backwards\n");
-		printf("\t 3. Attack Nearest Player\n");
+		printf("\t 3. Attempt Near Attack\n");
 
 		for(j=1; j<=playerLimit;j++){
 		printf("%s (%s, %.2f)\n", player[j].pName, player[j].pType, player[j].lifePoints);
@@ -221,7 +223,7 @@ int iSwap, i, j;
 		}
 
 		else if(iSwap ==3){
-			fAttack(i);//attack the nearest player
+			nearSearch(i);//attack the nearest player
 		}
 
 		else{
@@ -231,6 +233,83 @@ int iSwap, i, j;
 fContinue();
 }
 
+void nearSearch(int a){
+
+int j;
+char attack;
+
+	for(j=0; j<=playerLimit; j++){//loop through each player to see if they are nearby to attack
+		//if player is in same slot
+		if((player[j].pSlotRowNum==player[a].pSlotRowNum)&&(player[j].pSlotColNum==player[a].pSlotColNum)&&(j!=a)){
+			//would you like to attack
+			printf("Enter a to preform a Near Attack on %s, enter any other character to continue searching\n", player[j].pName);
+			scanf(" %c", &attack);
+			if(attack=='a'){
+				nearAttack(j, a);
+			}
+		}
+		//if player is in slot above
+		if((player[j].pSlotRowNum==player[a].pSlotRowNum+1)&&(player[j].pSlotColNum==player[a].pSlotColNum)&&(j!=a)){
+			//would you like to attack
+			printf("Enter a to preform a Near Attack on %s, enter any other character to continue searching\n", player[j].pName);
+			scanf(" %c", &attack);
+			if(attack=='a'){
+				nearAttack(j, a);
+			}
+		}
+		//if player is in slot to the right
+		if((player[j].pSlotRowNum==player[a].pSlotRowNum)&&(player[j].pSlotColNum+1==player[a].pSlotColNum)&&(j!=a)){
+			//would you like to attack
+			printf("Enter a to preform a Near Attack on %s, enter any other character to continue searching\n", player[j].pName);
+			scanf(" %c", &attack);
+			if(attack=='a'){
+				nearAttack(j, a);
+			}
+		}
+		//if player is in slot below
+		if((player[j].pSlotRowNum==player[a].pSlotRowNum-1)&&(player[j].pSlotColNum==player[a].pSlotColNum)&&(j!=a)){
+			//would you like to attack
+			printf("Enter a to preform a Near Attack on %s, enter any other character to continue searching\n", player[j].pName);
+			scanf(" %c", &attack);
+			if(attack=='a'){
+				nearAttack(j, a);
+			}
+		}
+		//if player is in slot to the left
+		if((player[j].pSlotRowNum==player[a].pSlotRowNum)&&(player[j].pSlotColNum-1==player[a].pSlotColNum)&&(j!=a)){
+			//would you like to attack
+			printf("Enter a to preform a Near Attack on %s, enter any other character to continue searching\n", player[j].pName);
+			scanf(" %c", &attack);
+			if(attack=='a'){
+				nearAttack(j, a);
+			}
+		}
+	}
+}
+
+void nearAttack(int n,int i){//reduces life points when attack is preformed
+double damage;
+
+	if(player[n].strength<=70){
+		printf("%s has %.2f health before attacking\n", player[i].pName, player[i].lifePoints);//display health of attacking player
+		printf("%s has %.2f health before being attacked\n", player[n].pName, player[n].lifePoints);//display health of player being attacked
+		damage = (0.5)*player[n].strength;
+		player[n].lifePoints = player[n].lifePoints - damage;
+		printf("Attacking Strike - %.2f\n", damage);
+		printf("%s has %.2f health after attacking\n", player[i].pName, player[i].lifePoints);//display health of attacking player
+		printf("%s has %.2f health after being attacked\n", player[n].pName, player[n].lifePoints);//display health of attacked player
+	}
+
+	else if(player[n].strength>70){
+		printf("%s has %.2f health before attacking\n", player[i].pName, player[i].lifePoints);//display value of attacking player
+		printf("%s has %.2f health before being attacked\n", player[n].pName, player[n].lifePoints);//display health of player being attacked
+		damage = (0.3)*player[n].strength;
+		player[i].lifePoints = player[i].lifePoints - damage;
+		printf("Defensive Strike - %.2f\n", damage);//display value of attack
+		printf("%s has %.2f health after attacking\n", player[i].pName, player[i].lifePoints);//Display attacking players health
+		printf("%s has %.2f health after being attacked\n", player[n].pName, player[n].lifePoints);//display health of attacked player
+	}
+}
 //moving current player forward 1 slot if not occuppied
 /*void moveForward(int i){
 	printf("Moving Player %s Forwards.\n", player[i].pName);
@@ -289,7 +368,7 @@ void CapabilitiesChange(int i){
 }*/
 
 // Function when Attacking a player
-void fAttack(int i){//reduces life points when attack is preformed
+/*void fAttack(int i){//reduces life points when attack is preformed
 
 	int n = nearestPlayer(i); // n is the player being attacked
 	float damage;
@@ -309,10 +388,10 @@ void fAttack(int i){//reduces life points when attack is preformed
 		printf("Normal Strike - %.2f\n", damage);//display value of attack
 		printf("%s has %.2f health after being attacking\n", player[n].pName, player[n].lifePoints);//Display attacked players health
 	}
-}
+}*/
 
 //Function to locate the nearest player
-int nearestPlayer(int i){
+/*int nearestPlayer(int i){
 
 	int a, b, instruct;
 
@@ -357,7 +436,7 @@ int nearestPlayer(int i){
 
 
 	}
-}
+}*/
 
 void fContinue(){ //Function for reloading a second round
 	int iOpt, i;
