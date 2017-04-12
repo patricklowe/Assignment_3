@@ -53,7 +53,6 @@ struct attributes {
 	int pSlotRowNum; //current slot number
 	int pSlotColNum; //current slot number
 	char pSlotType[6];// current slot type
-	int pPlaying; // Still playing game
 }; // End of structure
 
 // attributes for zones (slots)
@@ -94,7 +93,6 @@ if(playerLimit>6) {//if user input exceeds the 6 player limit set it to max
 		playerLimit = 2;//set the limit to 2
 		printf("\n\tMinimum number of Players required, Setting Players to 2!\n");
 	}
-		//playerRemaining = playerLimit;
 		for(i=1; i<=playerLimit; i++){//loop to set each characters attributes
 			printf("- - - - - - - - - - - - - - - - Player[%d] Creation - - - - - - - - - -\n", i);
 			
@@ -152,7 +150,6 @@ void humanAttributes(int a){
 	player[a].magic=rand() % (100 +1 -1) + 1;//random numer between 1 and 100
 	player[a].luck=rand() % (100 +1 -1) + 1;//random numer between 1 and 100
 	player[a].dexterity=rand() % (100 +1 -1) + 1;//random numer between 1 and 100
-	player[a].pPlaying = 1;
 	if((player[a].smart+player[a].strength+player[a].magic+player[a].luck+player[a].dexterity)>=300){
 		humanAttributes(a);
 	}
@@ -164,7 +161,6 @@ void ogreAttributes(int a){
 	player[a].magic=0;//magic set at 0
 	player[a].strength=rand() % (100 + 1 - 80) + 80;//random number between 80 and 100
 	player[a].dexterity=rand() % (100 + 1 - 80) + 80;//random number between 80 and 100
-	player[a].pPlaying = 1;
 	
 	while((player[a].luck+player[a].smart)>50){//ensures sum of luck and smartness is <=50
 	player[a].luck=rand() % (50 + 1 - 0) + 0;
@@ -180,7 +176,6 @@ void elfAttributes(int a){
 	player[a].strength=rand() % (50 + 1 - 1) + 1;//random number between 1 and 50
 	player[a].magic=rand() % (79 + 1 - 51) + 51;//random number between 79 and 51
 	player[a].dexterity=rand() % (100 +1 -1) + 1;//random number between 1 and 100
-	player[a].pPlaying = 1;
 }
 
 //sets the random attributes for a wizard
@@ -191,7 +186,6 @@ void wizardAttributes(int a){
 	player[a].strength=rand() % (20 + 1 - 1) + 1;//random number between 1 and 20
 	player[a].magic=rand() % (100 + 1 - 80) + 80;//random number between 80 and 100
 	player[a].dexterity=rand() % (100 +1 -1) + 1;//random number between 1 and 100
-	player[a].pPlaying = 1;
 }
 
 // Assign players to slots
@@ -211,7 +205,6 @@ void fOption(){
 int iSwap, i, j;
 	
 	for(i=1; i<=playerLimit; i++){
-		//if(player[i].pPlaying != 0){
 		if(playerLimit==1){
 			close();
 		}
@@ -257,10 +250,6 @@ int iSwap, i, j;
 			printf("Invalid Entry!");
 		}
 	}
-	//else{
-	//	i++;
-	//}
-	//}
 roundResults();
 fContinue();
 }
@@ -328,14 +317,14 @@ void fAttack(int i){//reduces life points when attack is preformed
 
 	else if(iOpt ==3){
 			if((player[i].smart+player[i].magic)>150){
-			magicOption(i);//Attacks any player
-		}
+				magicOption(i);//Attacks any player
+			}
 	}
 
 	else{
-			printf("Invalid Entry!");
+		printf("Invalid Entry!");
 	}
-	}
+}
 
 void nearSearch(int a){
 
