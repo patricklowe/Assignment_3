@@ -8,12 +8,10 @@
 #ifndef CROSSFIREOPERATIONS_H_
 #define CROSSFIREOPERATIONS_H_
 
-
-
 #endif /* CROSSFIREOPERATIONS_H_ */
 
 #define BOARD_SIZE 7
-#define REQ_DISTANCE 3
+#define REQ_DISTANCE 1
 
 /*
  * Definition of boolean types
@@ -30,6 +28,8 @@ struct slot{
 	int row;
 	//column number
 	int column;
+	//slot type
+	char SlotType;
 
 	// adjacent left slot
 	struct slot *left;
@@ -54,9 +54,12 @@ struct slot{
 //Returns the size of the board
 int getBoardSize();
 
+
+void assignPlayer(int maxsize, int * row, int * col, int * pSlotRowNum, int * pSlotColNum,struct slot ** board, char * pSlotType);
+
 //Asks the user to insert the row and the column of the element
 //she wants to find given a board of size equal to maxsize
-void getDesiredElement(int maxsize, int * row, int * col, int * pSlotRowNum, int * pSlotColNum, char * pSlotType);
+void getDesiredElement(int maxsize, int * Row, int * Col);
 
 /*
  * Functions createBoard and reachDesiredElement
@@ -71,7 +74,7 @@ void getDesiredElement(int maxsize, int * row, int * col, int * pSlotRowNum, int
  * 	downLeft: pointer of pointer to slot at position (size -1, 0)
  * 	upLeft: pointer of pointer to slot at position (size - 1, size -1)
  */
-void createBoard(int boardSize, struct slot **upLeft, struct slot **upRight, struct slot **downLeft, struct slot **downRight);
+void createBoard(int boardSize, struct slot **board, struct slot **SlotType, struct slot ***upLeft, struct slot ***upRight, struct slot ***downLeft, struct slot ***downRight);
 
 /*
  * This function traverses the board to find a slot at a predefined
@@ -81,7 +84,7 @@ void createBoard(int boardSize, struct slot **upLeft, struct slot **upRight, str
  * 	column: the column in which the desired slot is located
  * 	initialSlot: the slot from which the slot search should start
  */
-struct slot *  reachDesiredElement(int row, int column, struct slot * initialSlot);
+struct slot * reachDesiredElement(int row, int column, struct slot * initialSlot);
 
 
 /*
