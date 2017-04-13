@@ -22,7 +22,7 @@ void createBoard(int boardSize, struct slot **board, struct slot **upLeft, struc
 		for(int j=0;j < boardSize; j++){
 		board[i][j].row = i;
 		board[i][j].column = j;
-		t=0;
+		/*t=0;
 		t = rand() % 3; //random between 0 and 100
 		if(t == 0){
 		strcpy(&board[i][j].SlotType, "City");
@@ -36,7 +36,7 @@ void createBoard(int boardSize, struct slot **board, struct slot **upLeft, struc
 		strcpy(&board[i][j].SlotType, "Ground");
 //		board[i][j].SlotType = 3;
 		}
-		printf("\n\t\t (%d,%d): %c", board[i][j].row, board[i][j].column, board[i][j].SlotType);
+		printf("\n\t\t (%d,%d): %c", board[i][j].row, board[i][j].column, board[i][j].SlotType);*/
 		}
 		printf("\n");
 	}
