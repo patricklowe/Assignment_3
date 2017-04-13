@@ -1,11 +1,3 @@
-/*
- * userInteraction.c
-
- *
- *  Created on: 29 Mar 2017
- *      Author: liliana
- */
-
 #include <stdio.h>
 #include "crossfireOperations.h"
 #include "stdlib.h"
@@ -25,13 +17,12 @@ int getBoardSize(){
 // to the integers representing the row and the column of the slot that
 // the user want to retrieve
 //changing to assign players to element slot.
-void assignPlayer(int boardSize, int * row, int * col, int * pSlotRowNum, int * pSlotColNum,struct slot ** board, char * pSlotType){
+void assignPlayer(int boardSize, int * row, int * col, int * pSlotRowNum, int * pSlotColNum, struct slot **board, char * pSlotType){
 		int r=0;
 		//it will cycle asking the user to insert the row
 		//until the value of the desired row is >= 0 or < of the
 		// size of the board
 		do {
-			//printf("Row: ");
 			r = rand() % 100; //random between 0 and 100
 			*row = r % boardSize; // bring the value down to between 0 and number of slots specified by player
 			*pSlotRowNum = *row;
@@ -45,7 +36,17 @@ void assignPlayer(int boardSize, int * row, int * col, int * pSlotRowNum, int * 
 			*col = r % boardSize; // bring the value down to between 0 and number of slots specified by player
 			*pSlotColNum = *col;
 		} while(*col < 0 && *col >= boardSize);
-		
+		int t = 0;
+		t = rand() % 3; //random between 0 and 100
+		if(t == 0){
+		strcpy(pSlotType,"City");
+		}
+		if(t == 1){
+		strcpy(pSlotType,"Ground");
+		}
+		else if(t == 2){
+		strcpy(pSlotType,"Hill");
+		}
 }
 
 //THis function takes as input the size of the board and the pointers

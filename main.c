@@ -10,18 +10,17 @@ void ogreAttributes(int a);//function for Ogre Attributes
 void elfAttributes(int a);//function for Elf Attributes
 void wizardAttributes(int a);//function for Wizard Attributes
 void fAssign();
+int count = 0;
 void fOption();
 void fMove(int i);
-////////////////////
 struct slot* currSlot = NULL;
 struct slot *foundSlots;
 struct slot *upLeft;
 struct slot *upRight;
 struct slot *downLeft;
 struct slot *downRight;
-struct slot *SlotType;
+//struct slot *SlotType;
 struct slot *board;
-/////////////////////
 void fQuit(int i);
 void CapabilitiesChange(int i);
 void fAttack(int i);
@@ -33,6 +32,7 @@ void magicAttack();
 void fContinue();
 void close();
 int fBoard();
+void moveTo();
 int fBoardValue;
 int playerRemaining;
 int numSlots; // Stores the number of Slots, Max = 20 & Minimum = number of players
@@ -54,15 +54,8 @@ struct attributes {
 	int pPlaying; // Still playing game
 }; // End of structure
 
-// attributes for zones (slots)
-struct zone{
-	char pSlotType[7]; //stores slot type
-	int pSlotNum; // slot number, before being assigned to a player
-	int occupied;//0 indicates slot is not occupied, 1 indicates slot is occupied
-};
 
 struct attributes player[6];
-struct zone slots[20];
 
 int main(void){
 
@@ -80,7 +73,6 @@ void playerCreate(){
 int i;
 printf("- - - - - - - - - - - - - - - - Crossfire - - - - - - - - - - - - - - -\n");
 printf("- - - - - - - - - - - - - - - - Player Creation - - - - - - - - - - - -\n\n");
-
 printf("\tHow many players are there: ");
 scanf("%d", &playerLimit);
 
@@ -131,15 +123,9 @@ if(playerLimit>6) {//if user input exceeds the 6 player limit set it to max
 	{
 	printf("\n%d\t%s\t\t%s\t%.2f\t%d\t%d\t\t%d\t%d\t%d",i,player[i].pName,player[i].pType,player[i].lifePoints,player[i].smart,player[i].strength,player[i].magic,player[i].luck,player[i].dexterity);
 	}
-	
 	fBoardValue = 1;
-	fBoard(&board,&player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, SlotType, foundSlots, currSlot);
-	printf("\n upLeft: %d %d", &upLeft->column, &upLeft->row);
-	printf("\n upRight: %d %d", &upRight->column, &upRight->row);
-	printf("\n downLeft: %d %d", &downLeft->column, &downLeft->row);
-	printf("\n downRight: %d %d", &downRight->column, &downRight->row);
-	
-	}
+	fBoard(&count, &board,&player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, &foundSlots, &currSlot);
+}
 
 //sets the random attributes for a human
 void humanAttributes(int a){
@@ -198,7 +184,7 @@ void fAssign(){
 	int i;
 	fBoardValue = 2;
 	for(i=1; i<=playerLimit; i++){
-	fBoard(&board,&player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, SlotType, foundSlots, currSlot);
+	fBoard(&count, &board,&player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, &foundSlots, &currSlot);
 	printf("\n%s has been assigned to Slot: (%d,%d) %s", player[i].pName, player[i].pSlotRowNum,player[i].pSlotColNum, player[i].pSlotType);// Prints Plyaer name, SLot number from previous function, and slot type
 	}
 }
@@ -266,8 +252,8 @@ void fMove(int i){
 	//Load Function to find a slot
 	printf("Current Slot (%d,%d) %s\n", player[i].pSlotRowNum, player[i].pSlotColNum, player[i].pSlotType);
 	fBoardValue = 3;
-	fBoard(&board,&player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, SlotType, foundSlots, currSlot);
-	
+	fBoard(&count, &board, &player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, &foundSlots, &currSlot);
+
 	//change capabilites depending on new slot
 //	CapabilitiesChange(i);
 }

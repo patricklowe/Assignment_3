@@ -57,6 +57,7 @@ int getBoardSize();
 
 void assignPlayer(int maxsize, int * row, int * col, int * pSlotRowNum, int * pSlotColNum,struct slot ** board, char * pSlotType);
 
+void moveTo(int * pSlotRowNum, int * pSlotColNum, char * pSlotType, struct slot *foundSlots, int * count);
 //Asks the user to insert the row and the column of the element
 //she wants to find given a board of size equal to maxsize
 void getDesiredElement(int maxsize, int * Row, int * Col);
@@ -74,7 +75,7 @@ void getDesiredElement(int maxsize, int * Row, int * Col);
  * 	downLeft: pointer of pointer to slot at position (size -1, 0)
  * 	upLeft: pointer of pointer to slot at position (size - 1, size -1)
  */
-void createBoard(int boardSize, struct slot **board, struct slot **SlotType, struct slot ***upLeft, struct slot ***upRight, struct slot ***downLeft, struct slot ***downRight);
+void createBoard(int boardSize, struct slot **board, struct slot **upLeft, struct slot **upRight, struct slot **downLeft, struct slot **downRight);
 
 /*
  * This function traverses the board to find a slot at a predefined
