@@ -1,0 +1,5 @@
+searching:
+(0,0) & (0,6) do not work
+
+Level Types:
+not assigned correctly
