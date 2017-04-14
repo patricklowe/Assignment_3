@@ -2,8 +2,7 @@
 #include "string.h"
 #include <stdlib.h>
 #include "crossfireOperations.h"
-
-int fBoard(int * count, struct slot *board, int * pSlotRowNum, int * pSlotColNum, char * pSlotType, int fBoardValue, struct slot **upLeft,struct slot **upRight, struct slot **downLeft, struct slot **downRight, struct slot *SlotType,struct slot *foundSlots,struct slot *currSlot){
+int fBoard( int * count, struct slot *board, int * pSlotRowNum, int * pSlotColNum, char * pSlotType, int fBoardValue, struct slot **upLeft,struct slot **upRight, struct slot **downLeft, struct slot **downRight, struct slot *foundSlots,struct slot *currSlot){
 	int row = *pSlotRowNum, column = *pSlotColNum;
 	bool explored[BOARD_SIZE][BOARD_SIZE];
 	//Creates the board
@@ -59,7 +58,7 @@ int fBoard(int * count, struct slot *board, int * pSlotRowNum, int * pSlotColNum
 	}
 
 	int iSlot;
-	printf("Select a Slot to Move To: \n");
+	printf("\nSelect a Slot to Move To: \n");
 	for(j=0; j<*count; j++){
 	printf("%d. (%d,%d)\n", j+1, foundSlots[j].row, foundSlots[j].column);
 	}
@@ -81,6 +80,3 @@ int fBoard(int * count, struct slot *board, int * pSlotRowNum, int * pSlotColNum
 	*count = 0;
 }
 }
-
-
-

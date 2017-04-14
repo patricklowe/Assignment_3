@@ -1,15 +1,6 @@
-/*
- * crossfireOperations.h
- *
- *  Created on: 29 Mar 2017
- *      Author: liliana
- */
-
 #ifndef CROSSFIREOPERATIONS_H_
 #define CROSSFIREOPERATIONS_H_
-
 #endif /* CROSSFIREOPERATIONS_H_ */
-
 #define BOARD_SIZE 7
 #define REQ_DISTANCE 1
 
@@ -19,7 +10,6 @@
  */
 typedef int bool;
 enum { false, true };
-
 /*
  * The slot template
  */
@@ -29,7 +19,7 @@ struct slot{
 	//column number
 	int column;
 	//slot type
-	char SlotType;
+	char SlotType[7];
 
 	// adjacent left slot
 	struct slot *left;
@@ -54,8 +44,7 @@ struct slot{
 //Returns the size of the board
 int getBoardSize();
 
-
-void assignPlayer(int maxsize, int * row, int * col, int * pSlotRowNum, int * pSlotColNum,struct slot ** board, char * pSlotType);
+void assignPlayer(int maxsize, int * row, int * col, int * pSlotRowNum, int * pSlotColNum,struct slot **board, char * pSlotType);
 
 void moveTo(int * pSlotRowNum, int * pSlotColNum, char * pSlotType, struct slot *foundSlots, int * count);
 //Asks the user to insert the row and the column of the element

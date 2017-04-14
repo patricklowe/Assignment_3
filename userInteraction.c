@@ -18,7 +18,6 @@ int getBoardSize(){
 // the user want to retrieve
 //changing to assign players to element slot.
 void assignPlayer(int boardSize, int * row, int * col, int * pSlotRowNum, int * pSlotColNum, struct slot **board, char * pSlotType){
-		printf("\n\t\t (%d,%d): %c", &board[6][6].row, &board[6][6].column, &board[6][6].SlotType);
 		int r=0;
 		//it will cycle asking the user to insert the row
 		//until the value of the desired row is >= 0 or < of the

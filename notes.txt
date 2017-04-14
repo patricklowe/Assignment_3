@@ -1,5 +1,12 @@
 searching:
-(0,0) & (0,6) do not work
+(0,6) & (6,0) does not work
 
 Level Types:
-not assigned correctly
+not assigned correctly, wont be able to manage
+
+Combat:
+0.5 damage isnt working correct, 44 str reduced Life by 17 instead of 22, but 14 worked with reducing by 7.
+If a player is dead or quit they are still attackable but then program fails.
+
+
+

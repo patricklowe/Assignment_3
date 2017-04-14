@@ -9,33 +9,34 @@ void humanAttributes(int a); //function for human Attributes
 void ogreAttributes(int a);//function for Ogre Attributes
 void elfAttributes(int a);//function for Elf Attributes
 void wizardAttributes(int a);//function for Wizard Attributes
-void fAssign();
-int count = 0;
-void fOption();
-void fMove(int i);
-struct slot* currSlot = NULL;
-struct slot *foundSlots;
-struct slot *upLeft;
-struct slot *upRight;
-struct slot *downLeft;
-struct slot *downRight;
-struct slot *board;
+void fAssign(); // Assign Players to Slots
+int count = 0; // finding cells
+void fOption(); // main game menu
+void fMove(int i); // move slot
+struct slot* currSlot = NULL; //current slot position
+struct slot *foundSlots; // found slots when seraching
+struct slot *upLeft; // (0,0) for searching
+struct slot *upRight;// (0,6) for searching
+struct slot *downLeft;// (6,0) for searching
+struct slot *downRight;// (6,6) for searching
+struct slot *board; // game board
+void fQuit(int i); // quit game
 void removePlayer(int i);
 void roundResults();
-void CapabilitiesChange(int i);
-void fAttack(int i);
-void nearSearch();
-void nearAttack();
-void farSearch();
-void farAttack();
+void CapabilitiesChange(int i); //change player capabilities if they move slot
+void fAttack(int i); // attack the player
+void nearSearch(); // search nearby players
+void nearAttack(); // attack the selected nearby player
+void farSearch(); // search >1 <5
+void farAttack(); // attack the selected far away player
 void magicOption (int i);
-void magicAttack();
-void fContinue();
-void close();
-int fBoard();
-void moveTo();
-int fBoardValue;
-int playerRemaining;
+void magicAttack(); // perform the magic attack on any player
+void fContinue();  // reload the options menu
+void close(); //exit the game
+int fBoard(); // board functions
+void moveTo(); // move to selected slot
+int fBoardValue; //load board option
+int playerRemaining; // remaining players in the game
 int numSlots; // Stores the number of Slots, Max = 20 & Minimum = number of players
 int playerLimit;//sets player limit to 6
 
@@ -55,7 +56,7 @@ struct attributes {
 	int pPlaying; // Still playing game
 }; // End of structure
 
-struct attributes player[7];
+struct attributes player[6];
 
 int main(void){
 
@@ -77,16 +78,17 @@ printf("\tHow many players are there: ");
 scanf("%d", &playerLimit);
 
 if(playerLimit>6) {//if user input exceeds the 6 player limit set it to max
-	playerLimit = 6;//set the limit to 6
-	printf("\n\tMaximum Players exceeded, Setting Players to 6!\n");
-}
+		playerLimit = 6;//set the limit to 6
+		printf("\n\tMaximum Players exceeded, Setting Players to 6!\n");
+		playerRemaining = playerLimit;
+	}
 	else if(playerLimit<2){// prevents 1 player or less being entered as its a multiplayer game
-		playerLimit = 2;//set the limit to 2
+		playerRemaining = playerLimit;//set the limit to 2
 		printf("\n\tMinimum number of Players required, Setting Players to 2!\n");
 	}
+		playerRemaining = playerLimit;
 		for(i=1; i<=playerLimit; i++){//loop to set each characters attributes
 			printf("- - - - - - - - - - - - - - - - Player[%d] Creation - - - - - - - - - -\n", i);
-			
 			printf("Enter Player[%d] Name: ",i);
 			scanf("%s",player[i].pName); // stores up to 7 characters in player name
 
@@ -123,7 +125,7 @@ if(playerLimit>6) {//if user input exceeds the 6 player limit set it to max
 	printf("\n%d\t%s\t\t%s\t%.2f\t%d\t%d\t\t%d\t%d\t%d",i,player[i].pName,player[i].pType,player[i].lifePoints,player[i].smart,player[i].strength,player[i].magic,player[i].luck,player[i].dexterity);
 	}
 	fBoardValue = 1;
-	fBoard(&count, &board,&player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, &foundSlots, &currSlot);
+	fBoard(&count, &board, &player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, &foundSlots, &currSlot);
 }
 
 //sets the random attributes for a human
@@ -135,6 +137,7 @@ void humanAttributes(int a){
 	player[a].magic=rand() % (100 +1 -1) + 1;//random numer between 1 and 100
 	player[a].luck=rand() % (100 +1 -1) + 1;//random numer between 1 and 100
 	player[a].dexterity=rand() % (100 +1 -1) + 1;//random numer between 1 and 100
+	player[a].pPlaying = 1;
 	if((player[a].smart+player[a].strength+player[a].magic+player[a].luck+player[a].dexterity)>=300){
 		humanAttributes(a);
 	}
@@ -146,6 +149,7 @@ void ogreAttributes(int a){
 	player[a].magic=0;//magic set at 0
 	player[a].strength=rand() % (100 + 1 - 80) + 80;//random number between 80 and 100
 	player[a].dexterity=rand() % (100 + 1 - 80) + 80;//random number between 80 and 100
+	player[a].pPlaying = 1;
 	
 	while((player[a].luck+player[a].smart)>50){//ensures sum of luck and smartness is <=50
 	player[a].luck=rand() % (50 + 1 - 0) + 0;
@@ -161,6 +165,7 @@ void elfAttributes(int a){
 	player[a].strength=rand() % (50 + 1 - 1) + 1;//random number between 1 and 50
 	player[a].magic=rand() % (79 + 1 - 51) + 51;//random number between 79 and 51
 	player[a].dexterity=rand() % (100 +1 -1) + 1;//random number between 1 and 100
+	player[a].pPlaying = 1;
 }
 
 //sets the random attributes for a wizard
@@ -171,6 +176,7 @@ void wizardAttributes(int a){
 	player[a].strength=rand() % (20 + 1 - 1) + 1;//random number between 1 and 20
 	player[a].magic=rand() % (100 + 1 - 80) + 80;//random number between 80 and 100
 	player[a].dexterity=rand() % (100 +1 -1) + 1;//random number between 1 and 100
+	player[a].pPlaying = 1;
 }
 
 // Assign players to slots
@@ -179,22 +185,20 @@ void fAssign(){
 	int i;
 	fBoardValue = 2;
 	for(i=1; i<=playerLimit; i++){
-	fBoard(&count, &board,&player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, &foundSlots, &currSlot);
+	fBoard( &count, &board, &player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, &foundSlots, &currSlot);
 	printf("\n%s has been assigned to Slot: (%d,%d) %s", player[i].pName, player[i].pSlotRowNum,player[i].pSlotColNum, player[i].pSlotType);// Prints Plyaer name, SLot number from previous function, and slot type
 	}
 }
 
 // Options for current player to Attack or Move Slot
 void fOption(){
-
-int iSwap, i, j;
-	
+	int iSwap, i, j;
+	do{
+	if(playerRemaining == 0){
+		close();
+	}
 	for(i=1; i<=playerLimit; i++){
-		if(playerLimit==1){
-			close();
-		}
 		printf("\n\n- - - - - - - - - - - - - - - - Player %d Options - - - - - - - - - - -\n\n",i);
-
 		int bR = player[i].pSlotRowNum; // hold current player position, before moving backward
 		int bC = player[i].pSlotColNum;
 		--bR;//moves backwards 2 saces to accurately represent 1 space in the interface
@@ -235,10 +239,12 @@ int iSwap, i, j;
 		else{
 			printf("Invalid Entry!");
 		}
-	}
+		}
+	}while(playerRemaining != 0);
 roundResults();
 fContinue();
 }
+
 
 //moving current player forward 1 slot if not occuppied
 void fMove(int i){
@@ -250,7 +256,7 @@ void fMove(int i){
 	fBoard(&count, &board, &player[i].pSlotRowNum, &player[i].pSlotColNum, &player[i].pSlotType, fBoardValue, &upLeft, &upRight, &downLeft, &downRight, &foundSlots, &currSlot);
 
 	//change capabilites depending on new slot
-//	CapabilitiesChange(i);
+	CapabilitiesChange(i);
 }
 
 //function changes the capabilities of a player that moves
@@ -291,26 +297,27 @@ void fAttack(int i){//reduces life points when attack is preformed
 	printf("\t1. Near Attack\n");
 	printf("\t2. Far Attack\n");
 	printf("\t3. Magic Attack\n");
+	printf("\n\tAttack Type: ");
 	scanf("%d", &iOpt);
 	
 	if(iOpt == 1){
-			nearSearch(i); //move current player
-		}
+		nearSearch(i); //move current player
+	}
 
 	else if(iOpt == 2){
-			farSearch(i);//Attack nearby player
+		farSearch(i);//Attack nearby player
 	}
 
 	else if(iOpt ==3){
-			if((player[i].smart+player[i].magic)>150){
-				magicOption(i);//Attacks any player
-			}
+		if((player[i].smart+player[i].magic)>150){
+		magicOption(i);//Attacks any player
+		}
 	}
 
 	else{
 		printf("Invalid Entry!");
 	}
-}
+	}
 
 void nearSearch(int a){
 
@@ -319,69 +326,75 @@ void nearSearch(int a){
 
 	for(j=1; j<=playerLimit; j++){//loop through each player to see if they are nearby to attack
 		//if player is in same slot
-	//printf("\n\n J = %d \n\n A = %d", j, a);
+//	printf("\n\nJ = %d \nA = %d", j, a);
 		if((player[j].pSlotRowNum==player[a].pSlotRowNum)&&(player[j].pSlotColNum==player[a].pSlotColNum)&&(j!=a)){
 			//would you like to attack
 			printf("Enter 'a' to preform a Near Attack on Player %d. %s in your Slot\n\tEnter any other character to continue searching\n", j, player[j].pName);
 			scanf(" %c", &attack);
 			if(attack=='a'){
 				nearAttack(j, a);
-				return;
 			}
 		}
 		//if player is in slot above
 		if((player[j].pSlotRowNum==player[a].pSlotRowNum+1)&&(player[j].pSlotColNum==player[a].pSlotColNum)&&(j!=a)){
 			//would you like to attack
-			printf("Enter a to preform a Near Attack on Player %d. %s above you\n\tEnter any other character to continue searching\n", j, player[j].pName);
+			printf("\tEnter a to preform a Near Attack on Player %d. %s above you\n\tEnter any other character to continue searching\n", j, player[j].pName);
 			scanf(" %c", &attack);
 			if(attack=='a'){
 				nearAttack(j, a);
-				return;
 			}
 		}
 		//if player is in slot to the right
 		if((player[j].pSlotRowNum==player[a].pSlotRowNum)&&(player[j].pSlotColNum+1==player[a].pSlotColNum)&&(j!=a)){
 			//would you like to attack
-			printf("Enter a to preform a Near Attack on Player %d. %s to the Right\n\tEnter any other character to continue searching\n", j, player[j].pName);
+			printf("\tEnter a to preform a Near Attack on Player %d. %s to your Right\n\tEnter any other character to continue searching\n", j, player[j].pName);
 			scanf(" %c", &attack);
 			if(attack=='a'){
 				nearAttack(j, a);
-				return;
 			}
 		}
 		//if player is in slot below
 		if((player[j].pSlotRowNum==player[a].pSlotRowNum-1)&&(player[j].pSlotColNum==player[a].pSlotColNum)&&(j!=a)){
 			//would you like to attack
-			printf("Enter a to preform a Near Attack on Player %d. %s below you\n\tEnter any other character to continue searching\n", j, player[j].pName);
+			printf("\tEnter a to preform a Near Attack on Player %d. %s below you\n\tEnter any other character to continue searching\n", j, player[j].pName);
 			scanf(" %c", &attack);
 			if(attack=='a'){
 				nearAttack(j, a);
-				return;
 			}
 		}
 		//if player is in slot to the left
 		if((player[j].pSlotRowNum==player[a].pSlotRowNum)&&(player[j].pSlotColNum-1==player[a].pSlotColNum)&&(j!=a)){
 			//would you like to attack
-			printf("Enter a to preform a Near Attack on Player %d. %s to the left\n\tEnter any other character to continue searching\n",j, player[j].pName);
+			printf("\tEnter a to preform a Near Attack on Player %d. %s to your left\n\tEnter any other character to continue searching\n",j, player[j].pName);
 			scanf(" %c", &attack);
 			if(attack=='a'){
 				nearAttack(j, a);
-				return;
 			}
+		}
+		// if nobody is near by
+		else if((player[j].pSlotRowNum!=player[a].pSlotRowNum)&&(player[j].pSlotColNum!=player[a].pSlotColNum)&&(j!=a)){
+			printf("\n\tNo Players are Nearby!");
+//			fAttack(a);
 		}
 	}
 }
 
 void nearAttack(int n,int i){//reduces life points when attack is preformed
+double damage;
 
 	if(player[n].strength<=70){
-		player[n].lifePoints -= (0.5)*player[n].strength;
+		damage = (0.5)*player[n].strength;
+		player[n].lifePoints -= damage;
+		printf("Critical Strike - %.2f\n", damage);
+		printf("%s has %.2f health after being attacked\n", player[n].pName, player[n].lifePoints);//display health of attacked player
 	}
 
 	else if(player[n].strength>70){
-		player[i].lifePoints -= (0.3)*player[n].strength;
+		damage = (0.3)*player[n].strength;
+		player[i].lifePoints -= damage;
+		printf("Defensive Strike - %.2f\n", damage);//display value of attack
+		printf("%s has %.2f health after being attacked\n", player[n].pName, player[n].lifePoints);//display health of attacked player
 	}
-
 	if(player[n].lifePoints<=0){
 		removePlayer(n);
 	}
@@ -409,40 +422,44 @@ int b,attack;//b==player to be attacked, attack==intruct who to attack
 	for(b=1; b<=playerLimit; b++){
 		if(i!=b){
 			printf("Enter %d to preform a magic attack on %s\n", b, player[b].pName);
+			scanf("%d", &attack);
+			magicAttack(i, attack);
 		}
-	}
-
-	scanf("%d", &attack);
 		
-	while(attack==i){
+		else if(i==b){
 		printf("This will result in attacking yourself, please enter a number from the options provided\n");
 		scanf("%d", &attack);
+		magicAttack(i, attack);
 	}
-	magicAttack(i, attack);
+}
 }
 
-void magicAttack(int n, int i){//implements magic attack
-//n==attacking player, i==player being attacked
-	player[i].lifePoints-=((0.5*player[n].magic)+(0.2*player[n].smart));
-	if(player[i].lifePoints<=0){
-		removePlayer(i);
+void magicAttack(int i, int n){//implements magic attack
+// i== is attacking player, n==attacked player,
+double damage;
+
+	damage = ((0.5*player[i].magic)+(0.2*player[i].smart));
+	printf("Magical Strike - %.2f\n", damage);
+	player[n].lifePoints -= damage;
+	printf("%s has %.2f health after being attacked\n", player[n].pName, player[n].lifePoints);//display health of attacked player
+	if(player[n].lifePoints<=0){
+		removePlayer(n);
 	}
 }
 
 void removePlayer(int i){
-	int c;
-	printf("%s Eliminated From The Game!\n", player[i].pName);
-	//each player is moved back a position in the array
+	int iOpt;
 
-	for(c=i;c<playerLimit;c++){
-		player[c]=player[c+1];
-	}
-
-	playerLimit--;//number of players is reduced
+	printf("- - - - - - - - - - - - - - - - Crossfire - - - - - - - - - - - - - - -\n");
+	printf("- - - - - - - - - - - - You have been Eliminated! - - - - - - - - - - -\n");	
+	player[i].pPlaying = 0;
+	playerRemaining -= 1;
+	printf("\n\n\t\t\tPlayers remaining: %d\n", playerRemaining);
+	roundResults();
 }
 
 void roundResults(){ //Function for printing results after a round
-	printf("\n\n\t\t\t\tEnd of Round Results:");
+	printf("- - - - - - - - - - - - - - - - End of Round Results - - - - - - - - - - - - - - -\n");
 	printf("\n\tName\t\tType\tHealth\tSmart\tStrength\tMagic\tLuck\tDexterity");
 	int i;
 	for(i=1; i<=playerLimit; i++) // loop through players, printing details
@@ -456,14 +473,16 @@ fOption();
 }
 
 void close(){
-	printf("\n\n- - - - - - - - - - - -%s Is The Champion!!- - - - - - - - - - - - - -", player[1].pName);
-	printf("\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-	printf("- - - - - - - - - - - Thank You for Playing - - - - - - - - - - - - - -\n");
-	printf("- - - - - - - - - - - - - - Crossfire - - - - - - - - - - - - - - - - -\n");
-	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-	exit(0); //closes the program
+	printf("\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+	printf("- - - - - - - - - - - - - - - - - - Thank You for Playing Crossfire - - - - - - - - - - - - - - - - - - - -\n");
+	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+	printf("\tName\t\tType\tHealth\tSmart\tStrength\tMagic\tLuck\tDexterity");
+	int i;
+	for(i=1; i<=playerLimit; i++) // loop through players, printing details
+	{
+	printf("\n%d\t%s\t\t%s\t%.2f\t%d\t%d\t\t%d\t%d\t%d\n",i,player[i].pName,player[i].pType,player[i].lifePoints,player[i].smart,player[i].strength,player[i].magic,player[i].luck,player[i].dexterity);
+	}
+	exit(0);
 }

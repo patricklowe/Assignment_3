@@ -19,38 +19,29 @@ void createBoard(int boardSize, struct slot **board, struct slot **upLeft, struc
 		//This allocates in memory the space for the slots in each row of the board
 		board[i] = malloc(boardSize * sizeof(struct slot));
 		//For each slot it sets up the row and column number
-		for(int j=0;j < boardSize; j++){
+	for(int j=0;j < boardSize; j++){
 		board[i][j].row = i;
 		board[i][j].column = j;
-		/*t=0;
+		t=0;
 		t = rand() % 3; //random between 0 and 100
 		if(t == 0){
-		strcpy(&board[i][j].SlotType, "City");
-//		board[i][j].SlotType = 1;
+		strcpy(board[i][j].SlotType, "City");
 		}
 		if(t == 1){
-		strcpy(&board[i][j].SlotType, "Hill");
-//		board[i][j].SlotType = 2;
+		strcpy(board[i][j].SlotType, "Hill");
 		}
 		else if(t == 2){
-		strcpy(&board[i][j].SlotType, "Ground");
-//		board[i][j].SlotType = 3;
+		strcpy(board[i][j].SlotType, "Ground");
 		}
-		printf("\n\t\t (%d,%d): %c", board[i][j].row, board[i][j].column, board[i][j].SlotType);*/
-		}
-		printf("\n");
 	}
-//printf("It sets up the adjacent slots for the slots that are not at the borders. These slots have 4 adjacent elements");
+}
+	
 	for(int i =1; i< boardSize-1; i++){
 		for(int j=1;j < boardSize-1; j++){
 			board[i][j].up = &board[i-1][j];
-//			printf("\nboard[%d][%d].up = %d",i,j, board[i-1][j]);
 			board[i][j].right = &board[i][j+1];
-//			printf("\nboard[%d][%d].right = %d",i,j, board[i][j+1]);
 			board[i][j].down = &board[i+1][j];
-//			printf("\nboard[%d][%d].down = %d", i,j,board[i+1][j]);
 			board[i][j].left = &board[i][j-1];
-//			printf("\nboard[%d][%d].left = %d", i,j,board[i][j-1]);
 		}
 	}
 
@@ -129,10 +120,11 @@ void createBoard(int boardSize, struct slot **board, struct slot **upLeft, struc
  */
 struct slot * reachDesiredElement(int row, int column, struct slot * initialSlot){
 	bool found = false;
+	int availSlots = 0;
 	//current slot
 	struct slot * currentSlot = initialSlot;
 	//prints the column and the row of the initial slot from which the search starts
-	printf("Starting Point: (%d, %d)\n", initialSlot->row, initialSlot->column);
+	//printf("Starting Point: (%d, %d)\n", initialSlot->row, initialSlot->column);
 
 	//while the slot is not found
 	while(found == false){
@@ -143,7 +135,8 @@ struct slot * reachDesiredElement(int row, int column, struct slot * initialSlot
 			//the current slot now points to the slot one column left
 			currentSlot = currentSlot->left;
 			//prints the row and the column of the current slot
-			printf("Searching (%d, %d)\n",currentSlot->row,currentSlot->column);
+			//printf("Searching (%d, %d)\n",currentSlot->row,currentSlot->column);
+			availSlots += 1;
 		}
 
 		//if the column of the current slot is < of the column of the desired slot,
@@ -152,7 +145,8 @@ struct slot * reachDesiredElement(int row, int column, struct slot * initialSlot
 			//the current slot now points to the slot one column right
 			currentSlot = currentSlot->right;
 			//prints the row and the column of the current slot
-			printf("Searching (%d, %d)\n",currentSlot->row,currentSlot->column);
+			//printf("Searching (%d, %d)\n",currentSlot->row,currentSlot->column);
+		availSlots += 1;
 		}
 		//if the row of the current slot is > of the row of the desired slot,
 		//we move up
@@ -160,7 +154,8 @@ struct slot * reachDesiredElement(int row, int column, struct slot * initialSlot
 			//the current slot now points to the slot one row up
 			currentSlot = currentSlot->up;
 			//prints the column and the row of the current slot
-			printf("Searching (%d, %d)\n",currentSlot->row,currentSlot->column);
+		//	printf("Searching (%d, %d)\n",currentSlot->row,currentSlot->column);
+		availSlots += 1;
 		}
 		//if the row of the current slot is < of the row of the desired slot,
 		//we move down
@@ -168,12 +163,13 @@ struct slot * reachDesiredElement(int row, int column, struct slot * initialSlot
 			//the current slot now points to the slot one row down
 			currentSlot = currentSlot->down;
 			//prints the row and the column of the current slot
-			printf("Searching (%d, %d)\n",currentSlot->row,currentSlot->column);
+		//	printf("Searching (%d, %d)\n",currentSlot->row,currentSlot->column);
+		availSlots += 1;
 		}
 		//if the current slot is at a column and a row equal to the desired column and row, respectively
 		// we found the slot
 		if(currentSlot->column == column && currentSlot->row == row){
-			printf("Found (%d, %d)!\n", currentSlot->row,currentSlot->column);
+			printf("Found %d available Slots!\n", availSlots);
 			found = true;
 		}
 	}
