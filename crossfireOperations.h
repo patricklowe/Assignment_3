@@ -3,7 +3,8 @@
 #endif /* CROSSFIREOPERATIONS_H_ */
 #define BOARD_SIZE 7
 #define REQ_DISTANCE 1
-
+#define REQ_DISTANCE2 4
+#define REQ_DISTANCE3 3
 /*
  * Definition of boolean types
  * This avoids using <stdbool.h>
@@ -30,7 +31,7 @@ struct slot{
 	// adjacent down slot
 	struct slot *down;
 }slot;
-
+void farAttack(); // attack the selected far away player
 /*
  * FUNCTIONS PROTOTYPES
  */

@@ -228,6 +228,9 @@ void findSlots(int reqDist, int currDist,  struct slot * currSlot, struct slot *
 
 }
 
+void minusSlots(int reqDist, int currDist,  struct slot * currSlot, struct slot * foundSlots, int * count,  bool explored[BOARD_SIZE][BOARD_SIZE]){
+// not working, no time
+}
 
 
 

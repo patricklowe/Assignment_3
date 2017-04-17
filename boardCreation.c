@@ -2,7 +2,7 @@
 #include "string.h"
 #include <stdlib.h>
 #include "crossfireOperations.h"
-int fBoard( int * count, struct slot *board, int * pSlotRowNum, int * pSlotColNum, char * pSlotType, int fBoardValue, struct slot **upLeft,struct slot **upRight, struct slot **downLeft, struct slot **downRight, struct slot *foundSlots,struct slot *currSlot){
+int fBoard( int * count, struct slot *board, int * pSlotRowNum, int * pSlotColNum, char * pSlotType, int fBoardValue, struct slot **upLeft,struct slot **upRight, struct slot **downLeft, struct slot **downRight, struct slot *foundSlots,struct slot *currSlot, int playerLimit){
 	int row = *pSlotRowNum, column = *pSlotColNum;
 	bool explored[BOARD_SIZE][BOARD_SIZE];
 	//Creates the board
@@ -79,4 +79,39 @@ int fBoard( int * count, struct slot *board, int * pSlotRowNum, int * pSlotColNu
 	printf("\n New Slot is (%d,%d) %s\n", *pSlotRowNum, *pSlotColNum, pSlotType);
 	*count = 0;
 }
-}
+
+if(fBoardValue == 4){ // same as 3 but for far attack
+	if(row >= BOARD_SIZE/2){
+	if(column >= BOARD_SIZE/2){
+	currSlot = reachDesiredElement(*pSlotRowNum, *pSlotColNum, *downRight);
+	}
+	else{
+	currSlot = reachDesiredElement(*pSlotRowNum, *pSlotColNum, *downLeft);
+	}
+	} 
+	else{
+		if(column >= BOARD_SIZE/2){
+		currSlot = reachDesiredElement(*pSlotRowNum, *pSlotColNum, *upRight);
+		}
+		else {
+		currSlot = reachDesiredElement(*pSlotRowNum, *pSlotColNum, *upLeft);
+	}
+	}
+	int i,j;
+	for( i=0; i<BOARD_SIZE; i++){
+		for(j=0; j<BOARD_SIZE;j++){
+			explored[i][j] = false;
+		}
+	}
+
+	foundSlots = malloc(BOARD_SIZE * BOARD_SIZE * sizeof(struct slot ));
+	if(currSlot!= NULL){
+	findSlots(REQ_DISTANCE, 0, currSlot, foundSlots, count, explored); //adjacent slots to be removed
+	findSlots(REQ_DISTANCE2, 0, currSlot, foundSlots, count, explored);// slots 0 -> 4, excluding the 3rd
+	findSlots(REQ_DISTANCE3, 0, currSlot, foundSlots, count, explored);// including the 3rd slot
+	}
+	
+//	minusSlots(REQ_DISTANCE, 0, currSlot, foundSlots, count, explored);// didnt get time to remove the adjacent 1 slot distance...
+	farAttack(foundSlots, i);
+}// fBoard 4
+}// fBoard
