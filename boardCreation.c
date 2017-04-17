@@ -114,4 +114,5 @@ if(fBoardValue == 4){ // same as 3 but for far attack
 //	minusSlots(REQ_DISTANCE, 0, currSlot, foundSlots, count, explored);// didnt get time to remove the adjacent 1 slot distance...
 	farAttack(foundSlots, i);
 }// fBoard 4
+return 0;
 }// fBoard

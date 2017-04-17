@@ -26,7 +26,8 @@ void fAttack(int i); // attack the player
 void nearSearch(); // search nearby players
 void nearAttack(); // attack the selected nearby player
 void farSearch(); // search >1 <5
-void magicAttack(); // perform the magic attack on any player
+void magicOption (int i);
+void magicAttack();
 void fContinue();  // reload the options menu
 void close(); //exit the game
 int fBoard(); // board functions
@@ -298,7 +299,7 @@ void fAttack(int i){//reduces life points when attack is preformed
 	}
 
 	else if(iOpt ==3){
-			magicAttack(i);//attack the nearest player
+			magicOption(i);//attack the nearest player
 	}
 
 	else{
@@ -370,7 +371,7 @@ void nearAttack(int n,int i){//reduces life points when attack is preformed
 double damage;
 
 	if(player[n].strength<=70){
-		printf("\nPlayer %d has %d strength\n", player[n].pName,player[n].strength);
+		printf("\nPlayer %s has %d strength\n", player[n].pName,player[n].strength);
 		printf("%s has %.2f health before being attacked\n", player[n].pName, player[n].lifePoints);//display health of player being attacked
 		damage = (0.5)*player[n].strength;
 		player[n].lifePoints -= damage;
@@ -413,9 +414,32 @@ printf("(%d,%d)\n", foundSlots[i].row, foundSlots[i].column);
 }//board size
 }//player limit
 
-void magicAttack(int n, int i){
-	printf("magic attack function, may not need both variables above since no search is needed");
+void magicOption (int i){
+//i==player that is attacking
+int b,attack;//b==player to be attacked, attack==intruct who to attack
+	for(b=1; b<=playerLimit; b++){
+		if(i!=b){
+			printf("Enter %d to preform a magic attack on %s\n", b, player[b].pName);
+		}
+	}
+
+	scanf("%d", &attack);
+		
+	while(attack==i){
+		printf("This will result in attacking yourself, please enter a number from the options provided\n");
+		scanf("%d", &attack);
+	}
+	magicAttack(i, attack);
 }
+
+void magicAttack(int n, int i){//implements magic attack
+//n==attacking player, i==player being attacked
+	player[i].lifePoints-=((0.5*player[n].magic)+(0.2*player[n].smart));
+	if(player[i].lifePoints<=0){
+		player[i].pPlaying=0;
+	}
+}
+
 
 void fQuit(int i){ //Function for reloading a second round
 	int iOpt;
